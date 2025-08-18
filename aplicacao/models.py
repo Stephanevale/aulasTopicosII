@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+class Produto(models.Model):
+    name = models.CharField("Nome", max_length=200,null = True)
+    preco = models.DecimalField("Preço", decimal_places=2, max_digits=8)
+    quantidade = models.PositiveIntegerField("Quantidade", default=0, null=True)
+    def __st__(self):
+        return self.nome
