@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Produto</title>
-</head>
-<body>
-    {{produto}}
-</body>
+  </head>
+  <body>
+    <h1>Lista de Produtos</h1>
+    {% for p in produtos %}
+    <p>{{ p.nome }}</p>
+    {% endfor %}
+  </body>
 </html>
