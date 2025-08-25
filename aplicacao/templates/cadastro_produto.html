@@ -7,11 +7,11 @@
 </head>
 <body>
     <h1>Cadastro de Produtos</h1>
-    <form action="{%url 'url_cadastro_produto' %}">
+    <form action="{%url 'url_cadastro_produto' %}" method="POST">
         {% csrf_token %}
         <input type="text" name="nome" placeholder="Digite o nome" class="form-control" required><br>
-        <input type="text" name="preco" placeholder="Digite o nome" class="form-control" required><br>
-        <input type="text" name="quantidade" placeholder="Digite o nome" class="form-control" required><br>
+        <input type="text" name="preco" placeholder="Digite o preco" class="form-control" required><br>
+        <input type="text" name="quantidade" placeholder="Digite a quantidade" class="form-control" required><br>
         <input type="submit" nome="Salvar" class="btn btn-success"></input>
     </form>
 </body>

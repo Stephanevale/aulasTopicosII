@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Produto
 from django.http.response import HttpResponse
 # Create your views here.
@@ -17,4 +17,17 @@ def produto(request):
     return render(request, 'produto.html', context)
 
 def cadastro_produto(request):
-    return render(request, 'cadastro_produto.html')
+    if request.method == "GET":
+        return render(request, 'cadastro_produto.html')
+    elif request.method == "POST":
+        nome = request.POST.get('nome')
+        preco = request.POST.get('preco').replace(',', '.')
+        quantidade = request.POST.get('quantidade')
+
+        produto = Produto(
+            nome = nome,
+            preco = preco,
+            quantidade = quantidade,
+        )
+        produto.save()
+        return redirect('url_produto')
