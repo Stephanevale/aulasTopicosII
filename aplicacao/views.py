@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Produto
-
+from django.http.response import HttpResponse
 # Create your views here.
 
 def index(request):
@@ -15,3 +15,6 @@ def produto(request):
         'produtos': produtos,
     }
     return render(request, 'produto.html', context)
+
+def cadastro_produto(request):
+    return render(request, 'cadastro_produto.html')
