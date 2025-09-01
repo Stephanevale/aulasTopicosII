@@ -9,6 +9,8 @@ urlpatterns = [
     path('atualizar_produtos/<int:id>', views.atualizar_produtos, name="url_atualizar_produtos"),
     path('apagar_produto/<int:id>', views.apagar_produto, name="url_apagar_produto"),
     path('entrar', views.entrar, name="url_entrar"),
+    path('cadastro_user', views.cadastro_user, name="url_cadastro_user"),
+    path('sair', views.sair, name="url_sair")
 
    #path('criar_produto', views.criar_produto, name="url_criar_produto")
 ]

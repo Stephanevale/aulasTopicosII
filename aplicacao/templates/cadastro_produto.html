@@ -1,9 +1,13 @@
+{% load bootstrap4 %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Produtos</title>
+    {% bootstrap_css %}
+
 </head>
 <body>
     <h1>Cadastro de Produtos</h1>
@@ -12,7 +16,8 @@
         <input type="text" name="nome" placeholder="Digite o nome" class="form-control" required><br>
         <input type="text" name="preco" placeholder="Digite o preco" class="form-control" required><br>
         <input type="text" name="quantidade" placeholder="Digite a quantidade" class="form-control" required><br>
-        <input type="submit" nome="Salvar" class="btn btn-success"></input>
+        <input type="submit" name="Salvar" class="btn btn-success"></input>
     </form>
 </body>
+
 </html>

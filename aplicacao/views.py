@@ -3,14 +3,15 @@ from .models import Produto
 from django.http.response import HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
-
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 def index(request):
     context = {
         'texto': "olá mundo",
     }
     return render(request, 'index.html', context)
-
+@login_required(login_url="url_entrar")
 def produto(request):
     produtos = Produto.objects.all()
     context = {
@@ -19,20 +20,23 @@ def produto(request):
     return render(request, 'produto.html', context)
 
 def cadastro_produto(request):
-    if request.method == "GET":
-        return render(request, 'cadastro_produto.html')
-    elif request.method == "POST":
-        nome = request.POST.get('nome')
-        preco = request.POST.get('preco').replace(',', '.')
-        quantidade = request.POST.get('quantidade')
+    if request.user.is_authenticated:    
+        if request.method == "GET":
+            return render(request, 'cadastro_produto.html')
+        elif request.method == "POST":
+            nome = request.POST.get('nome')
+            preco = request.POST.get('preco').replace(',', '.')
+            quantidade = request.POST.get('quantidade')
 
-        produto = Produto(
-            nome = nome,
-            preco = preco,
-            quantidade = quantidade,
-        )
-        produto.save()
-        return redirect(('url_produto'))
+            produto = Produto(
+                nome = nome,
+                preco = preco,
+                quantidade = quantidade,
+            )
+            produto.save()
+            return redirect(('url_produto'))
+    else: 
+        return redirect('url_entrar')
 
 def atualizar_produtos(request, id):
     #prod = Produto.objects.get(id = id)
@@ -67,6 +71,26 @@ def entrar(request):
 
         if user:
             login(request, user)
-            return HttpResponse("Usuário logado com sucesso")
+            return  redirect('url_produto')
         else:
             return HttpResponse("Falha no login")
+
+def cadastro_user(request):
+    if request.method == 'POST':
+        usuario = request.POST.get('nome')
+        senha = request.POST.get('senha')
+        email= request.POST.get('email')
+
+        User = user.objects.filter(username=nome).first()
+        if user:
+            return HttpResponse("Usuário existe")
+        
+        user = User.objects.create_user(username=nome, email=email, password=senha)
+        user.save()
+        messages.sucess(request, "Usuário cadastrado")
+        return render(render, "cadastro_user.html")
+    else:
+        return render(request, 'cadastro_user.html')
+def sair(request):
+    logout(request)
+    return redirect('url_entrar')

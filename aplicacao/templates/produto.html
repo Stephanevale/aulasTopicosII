@@ -9,6 +9,9 @@
   </head>
   <body>
     <h1>Lista de Produtos</h1>
+    <form action="{% url 'url_sair' %}">
+      <input type="submit" value="sair" class="btn btn-danger">
+    </form>
     <table class="table">
         <thead>
           <tr>
@@ -41,6 +44,8 @@
           {% endfor %}
         </tbody>
       </table>
-      <input type="submit" name="Novo Produto" class="btn btn-success">
+      <form action="{% url 'url_cadastro_produto' %}" method="GET">
+        <input type="submit" name="btn_novo" value="Novo Produto" class="btn btn-success">
+      </form>
   </body>
 </html>
