@@ -10,7 +10,7 @@ urlpatterns = [
     path('apagar_produto/<int:id>', views.apagar_produto, name="url_apagar_produto"),
     path('entrar', views.entrar, name="url_entrar"),
     path('cadastro_user', views.cadastro_user, name="url_cadastro_user"),
-    path('sair', views.sair, name="url_sair")
-
+    path('sair', views.sair, name="url_sair"),
+    path('cadastro_cliente', views.cadastro_cliente, name="url_cadastro_cliente")
    #path('criar_produto', views.criar_produto, name="url_criar_produto")
 ]

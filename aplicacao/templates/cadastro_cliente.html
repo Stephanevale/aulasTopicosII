@@ -1,0 +1,64 @@
+{% load bootstrap4 %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Clientes</title>
+    {% bootstrap_css %}
+</head>
+<body>
+    <div class="container">
+        <form action="{% url 'url_cadastro_cliente' %}" method="POST" class="row g-3">
+            {% csrf_token %}
+            <div class="col">
+                <label class="form-label">Nome</label>
+                <input type="text" class="form-control" aria-label="First name">
+            </div>
+
+            <div class="col-md-6">
+                <label for="inputEmail4" class="form-label">E-mail</label>
+                <input type="email" class="form-control" name="email" required>
+            </div>
+
+            <div class="col-md-6">
+                <label  class="form-label">CEP</label>
+                <input type="text" class="form-control" name="cep">
+            </div>
+
+            <div class="col-md-6">
+                <label  class="form-label">Bairro</label>
+                <input type="text" class="form-control" name="bairro">
+            </div>
+
+            <div class="col-12">
+                <label for="inputAddress" class="form-label">Rua</label>
+                <input type="text" class="form-control" id="inputAddress" name="rua">
+            </div>
+
+            <div class="col-md-6">
+                <label  class="form-label">Número</label>
+                <input type="number" class="form-control" name="numero">
+            </div>
+
+            <div class = "col-md-6">
+                <label for="inputCity" class="form-label">Cidade</label>
+                <input type="text" class="form-control" id="inputCity" name="cidade">
+            </div>
+
+            <div class="col-md-6">
+                <label  class="form-label">Complemento</label>
+                <input type="text" class="form-control" name="complemento">
+            </div>
+
+            <div class="col-md-6">
+                <label  class="form-label">Telefone</label>
+                <input type="text" class="form-control" name="telefone">
+            </div>
+
+            <div class="col-12">
+                <input type="submit" value="Salvar" class="btn btn-success d-grid gap-3" name="btnSalvar">
+            </div>
+        </form>
+</body>
+</html>

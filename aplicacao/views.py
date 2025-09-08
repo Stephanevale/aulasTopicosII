@@ -5,6 +5,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from .models import Produto, Cliente
 
 def index(request):
     context = {
@@ -56,6 +57,7 @@ def atualizar_produtos(request, id):
         prod.quantidade = quantidade
         prod.save()
     return redirect('url_produto')
+
 def apagar_produto(request, id):
     prod = get_object_or_404(Produto, id=id)
     prod.delete()
@@ -77,20 +79,52 @@ def entrar(request):
 
 def cadastro_user(request):
     if request.method == 'POST':
-        usuario = request.POST.get('nome')
+        nome = request.POST.get('nome')
         senha = request.POST.get('senha')
         email= request.POST.get('email')
 
-        User = user.objects.filter(username=nome).first()
+        user = User.objects.filter(username=nome).first()
         if user:
             return HttpResponse("Usuário existe")
         
         user = User.objects.create_user(username=nome, email=email, password=senha)
         user.save()
-        messages.sucess(request, "Usuário cadastrado")
-        return render(render, "cadastro_user.html")
+        messages.success(request, "Usuário cadastrado") 
+        return render(request, "cadastro_user.html")
     else:
         return render(request, 'cadastro_user.html')
+
+def cadastro_cliente(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        email = request.POST.get('email')
+        cep = request.POST.get('cep')
+        rua = request.POST.get('rua')
+        numero = request.POST.get('numero')
+        bairro = request.POST.get('bairro')
+        cidade = request.POST.get('cidade')
+        complemento = request.POST.get('complemento')
+        telefone = request.POST.get('telefone')
+
+        cliente = Cliente.objects.create(nome=nome, email=email)
+
+        Perfil.objects.create(
+            cliente = cliente,
+            nome=nome,
+            email=email,
+            cep=cep,
+            rua=rua,
+            numero=numero,
+            bairro=bairro,
+            cidade=cidade,
+            complemento=complemento,
+            telefone=telefone
+        )
+        messages.success(request, "Cliente cadastrado com sucesso.")
+        return redirect('url_entrar')
+    return render(request, 'cadastro_cliente.html')
+
+
 def sair(request):
     logout(request)
     return redirect('url_entrar')
