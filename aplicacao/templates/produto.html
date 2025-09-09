@@ -9,43 +9,66 @@
   </head>
   <body>
     <h1>Lista de Produtos</h1>
-    <form action="{% url 'url_sair' %}">
-      <input type="submit" value="sair" class="btn btn-danger">
-    </form>
     <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nome</th>
-            <th scope="col">Preço</th>
-            <th scope="col">Quantidade</th>
-            <th scope="col">Atualizar</th>
-            <th scope="col">Apagar</th>
-          </tr>
-        </thead>
-        <tbody>
-            {% for p in produtos %}
-          <tr>
-            <th scope="row">{{ p.id }}</th>
-            <td>{{ p.nome }}</td>
-            <td>{{ p.preco }}</td>
-            <td>{{ p.quantidade }}</td>
-            <td>
-              <form action="{% url 'url_atualizar_produtos' p.id %}">
-              <input type="submit" name="btnAtualizar" class="btn btn-primary" value="Atualizar">
-              </form>            
-            </td>
-            <td>
-              <form action="{% url 'url_apagar_produto' p.id %}">
-              <input type="submit" name="btnApagar" class="btn btn-danger" value="Apagar">
-              </form>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      <form action="{% url 'url_cadastro_produto' %}" method="GET">
-        <input type="submit" name="btn_novo" value="Novo Produto" class="btn btn-success">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nome</th>
+          <th scope="col">Preço</th>
+          <th scope="col">Quantidade</th>
+          <th scope="col">Atualizar</th>
+          <th scope="col">Apagar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in produtos %}
+        <tr>
+          <th scope="row">{{ p.id }}</th>
+          <td>{{ p.nome }}</td>
+          <td>{{ p.preco }}</td>
+          <td>{{ p.quantidade }}</td>
+          <td>
+            <form action="{% url 'url_atualizar_produtos' p.id %}">
+              <input
+                type="submit"
+                name="btnAtualizar"
+                class="btn btn-primary"
+                value="Atualizar"
+              />
+            </form>
+          </td>
+          <td>
+            <form action="{% url 'url_apagar_produto' p.id %}">
+              <input
+                type="submit"
+                name="btnApagar"
+                class="btn btn-danger"
+                value="Apagar"
+              />
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+        <form action="{% url 'url_sair' %}">
+        <input type="submit" value="sair" class="btn btn-danger" />
       </form>
+      <form action="{% url 'url_cadastro_produto' %}" method="GET" class="mt-3">
+        <input
+          type="submit"
+          name="btn_novo"
+          value="Novo Produto"
+          class="btn btn-success"
+        />
+      </form>
+       <form action="{% url 'url_cadastro_cliente' %}" method="GET" class="mt-3">
+        <input
+          type="submit"
+          name="btn_novo"
+          value="Cadastrar Cliente"
+          class="btn btn-warning"
+        />
+    </form>
   </body>
 </html>

@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Produto
 from django.http.response import HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Produto, Cliente
+from .models import Produto, Cliente, Perfil, Produto
+
 
 def index(request):
     context = {
@@ -90,7 +90,7 @@ def cadastro_user(request):
         user = User.objects.create_user(username=nome, email=email, password=senha)
         user.save()
         messages.success(request, "Usuário cadastrado") 
-        return render(request, "cadastro_user.html")
+        return render(request, "entrar.html")
     else:
         return render(request, 'cadastro_user.html')
 
@@ -106,6 +106,10 @@ def cadastro_cliente(request):
         complemento = request.POST.get('complemento')
         telefone = request.POST.get('telefone')
 
+        if Cliente.objects.filter(email=email).exists():
+            messages.error(request, "Esse e-mail já está cadastrado!")
+            return redirect("url_cadastro_user")
+        
         cliente = Cliente.objects.create(nome=nome, email=email)
 
         Perfil.objects.create(
@@ -119,7 +123,8 @@ def cadastro_cliente(request):
             cidade=cidade,
             complemento=complemento,
             telefone=telefone
-        )
+            )
+        
         messages.success(request, "Cliente cadastrado com sucesso.")
         return redirect('url_entrar')
     return render(request, 'cadastro_cliente.html')
