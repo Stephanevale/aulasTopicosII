@@ -4,7 +4,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Produto, Cliente, Perfil, Produto
+from .models import Produto, Cliente, Perfil, Produto, Venda, ItemVenda
 
 
 def index(request):
@@ -129,7 +129,31 @@ def cadastro_cliente(request):
         return redirect('url_entrar')
     return render(request, 'cadastro_cliente.html')
 
+def vendas(request):
+    clientes = Cliente.objects.all()
+    produtos = Produto.objects.all()
+    if request.method == "POST":
+        cliente_id = request.POST.get('cliente')
+        cliente = Cliente.objects.get(id=cliente_id)
+        venda = Venda.objects.create(cliente=cliente)
 
+        for produto in produtos:
+            quantidade = request.POST.get(f'quantidade_{produto.id}')
+            if quantidade:
+                quantidade = int(quantidade)
+            selecionado = request.POST.getlist('produto')
+            if selecionado and quantidade > 0:
+                ItemVenda.objects.create(
+                    venda=venda,
+                    produto=produto,
+                    quantidade=quantidade
+                    )
+            produto.quantidade -= quantidade
+            produto.save()
+
+    messages.success(request, "Sua venda foi registrada")
+    return render(request, 'vendas.html', {'clientes': clientes, 'produtos': produtos})
+    
 def sair(request):
     logout(request)
     return redirect('url_entrar')
