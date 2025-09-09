@@ -108,14 +108,12 @@ def cadastro_cliente(request):
 
         if Cliente.objects.filter(email=email).exists():
             messages.error(request, "Esse e-mail já está cadastrado!")
-            return redirect("url_cadastro_user")
+            return redirect("url_produto")
         
         cliente = Cliente.objects.create(nome=nome, email=email)
 
         Perfil.objects.create(
             cliente = cliente,
-            nome=nome,
-            email=email,
             cep=cep,
             rua=rua,
             numero=numero,
