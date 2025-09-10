@@ -124,7 +124,7 @@ def cadastro_cliente(request):
             )
         
         messages.success(request, "Cliente cadastrado com sucesso.")
-        return redirect('url_entrar')
+        return redirect('url_produto')
     return render(request, 'cadastro_cliente.html')
 
 def vendas(request):
@@ -135,23 +135,27 @@ def vendas(request):
         cliente = Cliente.objects.get(id=cliente_id)
         venda = Venda.objects.create(cliente=cliente)
 
-        for produto in produtos:
-            quantidade = request.POST.get(f'quantidade_{produto.id}')
-            if quantidade:
-                quantidade = int(quantidade)
-            selecionado = request.POST.getlist('produto')
-            if selecionado and quantidade > 0:
-                ItemVenda.objects.create(
-                    venda=venda,
-                    produto=produto,
-                    quantidade=quantidade
-                    )
-            produto.quantidade -= quantidade
-            produto.save()
+        produtos_selecionados = request.POST.getlist('produto')
 
-    messages.success(request, "Sua venda foi registrada")
+        for produto in produtos:
+            if str(produto.id) in produtos_selecionados:
+                quantidade_str = request.POST.get(f'quantidade_{produto.id}')
+                try:
+                    quantidade = int(quantidade_str)
+                except (ValueError, TypeError):
+                    quantidade = 0
+
+                if quantidade > 0:
+                    ItemVenda.objects.create(
+                        venda=venda,
+                        produto=produto,
+                        quantidade=quantidade
+                    )
+                    produto.quantidade -= quantidade
+                    produto.save()
+        messages.success(request, "Sua venda foi registrada")
     return render(request, 'vendas.html', {'clientes': clientes, 'produtos': produtos})
-    
+
 def sair(request):
     logout(request)
     return redirect('url_entrar')

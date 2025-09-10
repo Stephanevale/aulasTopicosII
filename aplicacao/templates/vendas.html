@@ -8,9 +8,16 @@
     {% bootstrap_css %}
   </head>
   <body>
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-{{ message.tags }} fade show mt-3 auto-dismiss"
+      role="alert"
+    >
+      {{ message }}
+    </div>
+    {% endfor %} {% endif %}
     <div class="container mt-4">
       <h1>Mercearia - Registrar Venda</h1>
-
       <form method="POST">
         {% csrf_token %}
         <h2>Selecione o Cliente</h2>
@@ -63,5 +70,15 @@
         </button>
       </form>
     </div>
+    <script>
+      setTimeout(function () {
+        const alerts = document.querySelectorAll(".auto-dismiss");
+        alerts.forEach(function (alert) {
+          alert.classList.remove("show");
+          alert.classList.add("fade");
+          setTimeout(() => alert.remove(), 500);
+        });
+      }, 3000);
+    </script>
   </body>
 </html>

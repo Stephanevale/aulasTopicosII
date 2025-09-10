@@ -9,11 +9,19 @@
 </head>
 <body>
     <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} fade show mt-3 auto-dismiss" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
         <form action="{% url 'url_cadastro_cliente' %}" method="POST" class="row g-3">
             {% csrf_token %}
             <div class="col">
                 <label class="form-label">Nome</label>
-pt-br            </div>
+                <input type="text" class="form-control" name="nome" required>
+            </div>
 
             <div class="col-md-6">
                 <label for="inputEmail4" class="form-label">E-mail</label>
@@ -59,5 +67,15 @@ pt-br            </div>
                 <input type="submit" value="Salvar" class="btn btn-success d-grid gap-3" name="btnSalvar">
             </div>
         </form>
-</body>
+        <script>
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.auto-dismiss'); 
+                alerts.forEach(function(alert) {
+                    alert.classList.remove('show');
+                    alert.classList.add('fade');
+                    setTimeout(() => alert.remove(), 500);
+                });
+            }, 3000);
+        </script>
+    </body>
 </html>

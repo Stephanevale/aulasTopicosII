@@ -1,22 +1,62 @@
 {% load bootstrap4 %}
 
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cadastro de Usuários</title>
     {% bootstrap_css %}
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <form action="{% url 'url_cadastro_user' %}" method="POST">
-            {% csrf_token %}
-            <input type="text" name="nome" placeholder="Digite o nome do usuário" class="form-control" required>
-            <input type="password" name="senha" placeholder="Digite a senha" required>
-            <input type="email" name="email" placeholder="Digite o email" class="form-control" required>
-            <input type="submit" value="Salvar" class="btn btn-success" name="btnSalvar">
-        </form>
+      {% if messages %} {% for message in messages %}
+      <div
+        class="alert alert-{{ message.tags }} fade show mt-3 auto-dismiss"
+        role="alert"
+      >
+        {{ message }}
+      </div>
+      {% endfor %} {% endif %}
+      <form action="{% url 'url_cadastro_user' %}" method="POST">
+        {% csrf_token %}
+        <input
+          type="text"
+          name="nome"
+          placeholder="Digite o nome do usuário"
+          class="form-control"
+          required
+        />
+        <input
+          type="password"
+          name="senha"
+          placeholder="Digite a senha"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Digite o email"
+          class="form-control"
+          required
+        />
+        <input
+          type="submit"
+          value="Salvar"
+          class="btn btn-success"
+          name="btnSalvar"
+        />
+      </form>
     </div>
-</body>
+    <script>
+      setTimeout(function () {
+        const alerts = document.querySelectorAll(".auto-dismiss");
+        alerts.forEach(function (alert) {
+          alert.classList.remove("show");
+          alert.classList.add("fade");
+          setTimeout(() => alert.remove(), 500);
+        });
+      }, 3000);
+    </script>
+  </body>
 </html>
