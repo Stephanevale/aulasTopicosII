@@ -4,10 +4,9 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Produto, Cliente, Perfil, Produto, Venda, ItemVenda
+from .models import Produto, Cliente, Perfil, Produto, Venda, ItemVenda, Avaliacao
 import pandas as pd
-import io
-import urllib, base64
+import io, urllib, base64, matplotlib, numpy
 
 def index(request):
     context = {
@@ -174,5 +173,14 @@ def plot_to_base64(fig):
     buf.seek(0)
     string = base64.b64encode(buf.read())
 
-
-
+def usuarios_mais_ativos(request):
+    df = get_dataframe()
+    return render(request, 'usuarios_mais_ativos.html')
+    nomes = df['profile_name']
+    print(nomes)
+def evolucao_ao_longo_do_tempo():
+    pass
+def preco_vs_nota():
+    pass
+def analise_sentimento_simples():
+    pass

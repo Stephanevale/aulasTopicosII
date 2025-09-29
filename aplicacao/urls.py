@@ -12,6 +12,6 @@ urlpatterns = [
     path('cadastro_user', views.cadastro_user, name="url_cadastro_user"),
     path('sair', views.sair, name="url_sair"),
     path('cadastro_cliente', views.cadastro_cliente, name="url_cadastro_cliente"),
-    path('vendas', views.vendas, name="url_vendas")
-   #path('criar_produto', views.criar_produto, name="url_criar_produto")
+    path('vendas', views.vendas, name="url_vendas"),
+    path('usuarios_mais_ativos', views.usuarios_mais_ativos, name="url_usuarios_mais_ativos")
 ]
