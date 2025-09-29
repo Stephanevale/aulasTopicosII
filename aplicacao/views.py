@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Produto, Cliente, Perfil, Produto, Venda, ItemVenda
-
+import pandas as pd
+import io
+import urllib, base64
 
 def index(request):
     context = {
@@ -159,3 +161,18 @@ def vendas(request):
 def sair(request):
     logout(request)
     return redirect('url_entrar')
+
+
+def get_dataframe():
+    avaliacoes = Avaliacao.objects.all().values()
+    df = pd.DataFrame(list(avaliacoes))
+    return df
+    
+def plot_to_base64(fig):
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    string = base64.b64encode(buf.read())
+
+
+
