@@ -1,8 +1,10 @@
 from django.urls import path
+from django.contrib import admin
 from . import views
 
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('', views.index, name='url_index'),
     path('produto', views.produto, name='url_produto'),
     path('cadastro_produto', views.cadastro_produto, name="url_cadastro_produto"),
