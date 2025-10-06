@@ -1,14 +1,25 @@
+{% load bootstrap4 %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Inicial</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Página Inicial</h1>
-    {{texto}}
-    <a href="produto">produto</a><br>
-    <a href="{% url 'url_usuarios_mais_ativos' %}" class="btn btn-success">Livros</a>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Menu</h1>
+        <div class="d-flex justify-content-center">
+            <div class="btn-group-vertical">
+                <a href="{% url 'url_produto' %}" class="btn btn-primary mb-2">Produto</a>
+                <a href="{% url 'url_usuarios_mais_ativos' %}" class="btn btn-success mb-2">Usuários mais ativos</a>
+                <a href="{% url 'url_evolucao_reviews' %}" class="btn btn-success mb-2">Evolução dos anos</a>
+                <a href="{% url 'url_grafico_preco_score' %}" class="btn btn-success mb-2">Correlação entre Preço e Nota</a>
+                <a href="{% url 'url_grafico_sentimento' %}" class="btn btn-success mb-2">Análise de Sentimento Simples</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

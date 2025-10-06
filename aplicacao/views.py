@@ -6,13 +6,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Produto, Cliente, Perfil, Produto, Venda, ItemVenda, Avaliacao
 import pandas as pd
-import io, urllib, base64, matplotlib, numpy
+import io, urllib, base64, os
+import numpy as np 
+import matplotlib
+matplotlib.use('Agg')  
+import matplotlib.pyplot as plt
 
 def index(request):
-    context = {
-        'texto': "olá mundo",
-    }
-    return render(request, 'index.html', context)
+    return render(request, 'index.html')
 @login_required(login_url="url_entrar")
 def produto(request):
     produtos = Produto.objects.all()
@@ -163,24 +164,112 @@ def sair(request):
 
 
 def get_dataframe():
-    avaliacoes = Avaliacao.objects.all().values()
-    df = pd.DataFrame(list(avaliacoes))
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+    base_dir = os.path.dirname(current_dir)
+
+    file_path = os.path.join(base_dir, 'books-15k.csv')
+
+    
+    df = pd.read_csv(file_path)
+
     return df
     
 def plot_to_base64(fig):
     buf = io.BytesIO()
     fig.savefig(buf, format='png')
     buf.seek(0)
-    string = base64.b64encode(buf.read())
+    string = base64.b64encode(buf.read()).decode('utf-8')
+    return string
 
 def usuarios_mais_ativos(request):
     df = get_dataframe()
-    return render(request, 'usuarios_mais_ativos.html')
     nomes = df['profile_name']
-    print(nomes)
-def evolucao_ao_longo_do_tempo():
-    pass
-def preco_vs_nota():
-    pass
-def analise_sentimento_simples():
-    pass
+    nomes = nomes.replace(['Unknown'], np.nan)
+    nomes_filtrados = nomes.dropna()
+    contagem_valores = (nomes_filtrados.value_counts().nlargest(15).sort_values(ascending=True))
+    
+    grafico = plt.figure(figsize=(10, 6))
+    plt.barh(contagem_valores.index.astype(str), contagem_valores.values, color='#1f77b4')
+    plt.title('Top 15 usuários mais ativos')
+    plt.ylabel('Usuários')
+    plt.xlabel('Número de Avaliações"')
+    plt.grid(True, alpha = 0.2)
+    plt.tight_layout()
+
+    imagem_base64 = plot_to_base64(grafico)
+    plt.close(grafico)
+
+    context = {'grafico': imagem_base64}
+
+    return render(request, 'usuarios_mais_ativos.html', context)
+
+def evolucao_ao_longo_do_tempo(request):
+    df = get_dataframe()
+    df['data_review'] = pd.to_datetime(df['review_time'], unit='s')
+    df['ano'] = df['data_review'].dt.year
+    df['ano'].value_counts().sort_index()
+    avaliacao_cada_ano = df['ano'].value_counts().sort_index()
+
+    evolucao = plt.figure(figsize=(8, 4))
+    plt.plot(avaliacao_cada_ano.index, avaliacao_cada_ano.values, marker='o', linestyle='--', color='b')
+    plt.title('Evolução do Número de Avaliações por Ano')
+    plt.xlabel('Ano')
+    plt.ylabel('Quantidade de Avaliações')
+    plt.grid(True, alpha =0.2)
+    plt.tight_layout()
+
+    imagem_base64 = plot_to_base64(evolucao)
+    plt.close(evolucao)
+
+    context = {'evolucao': imagem_base64}
+    return render(request, 'grafico_evolucao_reviews.html', context)
+
+def preco_vs_score(request):
+    df = get_dataframe()
+    df = df[df['price'] > 0].sample(n=1000)
+    preco_score = plt.figure(figsize=(10, 5))
+    plt.scatter(df['price'], df['review_score'], alpha=0.3)
+    plt.title('Correlação entre Preço e Nota da Avaliação')
+    plt.xlabel('Preço')
+    plt.ylabel('Nota da Avaliação')
+    plt.grid(True)
+
+    imagem_base64 = plot_to_base64(preco_score)
+    plt.close(preco_score)
+
+    context = {'preco_score': imagem_base64}
+    return render(request, 'grafico_preco_score.html', context)
+
+def sentimento_reviews(request):
+    df = get_dataframe()
+    df['review_summary'] = df['review_summary'].fillna('').str.lower()
+
+    lista_positivas = ['good', 'great', 'excellent', 'i loved', 'i recommend', 'perfect', 'wonderful', 'sucess', 'pleasant','fine', 'dope', 'fantastic','amazing']
+    lista_negativas = ['bad', 'terrible', 'disappointing', "i didn't like it", 'horrible', 'hated', 'horrible','awful', 'poor', 'dreadful', 'appalling']
+
+    
+    def recebe_texto(texto):
+        for palavra in lista_positivas:
+            if palavra in texto:
+                return 'Positivo'
+        for palavra in lista_negativas:
+            if palavra in texto:
+                return 'Negativo'
+        return 'Neutro'
+    df['sentimento'] = df['review_summary'].apply(recebe_texto)
+    contagem_sentimentos = df['sentimento'].value_counts()
+
+    labels = contagem_sentimentos.index
+    valores = contagem_sentimentos.values
+    sentimento = plt.figure(figsize=(7, 7))
+    explode = (0.1, 0, 0, 0)
+    plt.pie(valores, labels=labels, autopct='%1.1f%%', startangle=45, colors=['blue', 'green', 'red'])
+    plt.title('Distribuição de Sentimentos nos Sumários das Avaliações')
+    plt.axis('equal')
+
+    imagem_base64 = plot_to_base64(sentimento)
+    plt.close(sentimento)
+
+    context = {'sentimento': imagem_base64}
+    return render(request, 'grafico_sentimento.html', context)
